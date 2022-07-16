@@ -64,7 +64,25 @@ ReactDOM.render(React.createElement(LikeButton), document.querySelector("#root")
 React 18버전
 
 ```javascript
-ReactDOM.createRoot(document.querySelector("#root").render(<LikeButton />);
+ReactDOM.createRoot(document.querySelector("#root").render(<LikeButton />));
 ```
 
 -> 순서도 헷갈리지 않도록 바꾸어 주었음
+
+### 1-4) 객체를 함부로 바꾸지 말고 복사본을 사용할 것
+
+```javascript
+return <button onClick={() => this.setState({ liked: true })}>Like</button>;
+```
+
+이렇게 직접 state를 바꾸면 안됨
+
+```javascript
+return <button onClick={() => { this.state.liked = true }}>Like `</button>`;
+```
+
+(배열, 함수도 객체임)
+
+react에서는 `push`, `pop`, `shift`, `unshift`, `splice` 처럼 배열을 직접적으로 수정하는 함수는 사용하면 안됨
+
+`concat`, `slice` 처럼 원본을 수정하지 않는 함수들을 사용해야 함
