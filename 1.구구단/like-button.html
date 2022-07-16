@@ -15,21 +15,25 @@
     <script type="text/babel">
       "use strict";
 
-      // class는 거의 1%정도만 쓰임 (1% ErrorBoundary)
-      class LikeButton extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = { liked: false };
+      // 함수 컴포넌트 (함수형 컴포넌트 X)
+      // 이렇게 Arrow Functiond을 사용하면 this를 쓸 일이 없어짐!
+      const LikeButton = () => {
+        const [liked, setLiked] = React.useState(false);
+        if (liked) {
+          return "You liked this.";
         }
-        render() {
-          if (this.state.liked) {
-            return "You liked this.";
-          }
 
-          // return React.createElement("button", { onClick: () => this.setState({ liked: true }) }, "Like");
-          return <button onClick={() => this.setState({ liked: true })}>Like</button>;
-        }
-      }
+        // 뭔 짓을 하든, 결국 return한 것이 화면에 나타남!
+        return (
+          <button
+            onClick={() => {
+              setLiked(true);
+            }}
+          >
+            Like
+          </button>
+        );
+      };
     </script>
     <script type="text/babel">
       // LikeButton 컴포넌트를 root 안에다 그림

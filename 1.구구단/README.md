@@ -86,3 +86,31 @@ return <button onClick={() => { this.state.liked = true }}>Like `</button>`;
 react에서는 `push`, `pop`, `shift`, `unshift`, `splice` 처럼 배열을 직접적으로 수정하는 함수는 사용하면 안됨
 
 `concat`, `slice` 처럼 원본을 수정하지 않는 함수들을 사용해야 함
+
+### 1-5) 함수 컴포넌트
+
+위의 클래스 컴포넌트를 대신하여 이제 이렇게 함수 컴포넌트를 사용함
+
+```javascript
+    <script type="text/babel">
+      "use strict";
+
+      // 함수 컴포넌트 (함수형 컴포넌트 X)
+      function LikeButton() {
+        const [liked, setLiked] = React.useState(false);
+        if (liked) {
+          return "You liked this.";
+        }
+
+        return (
+          <button
+            onClick={() => {
+              setLiked(true);
+            }}
+          >
+            Like
+          </button>
+        );
+      }
+    </script>
+```
