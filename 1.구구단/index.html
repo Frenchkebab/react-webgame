@@ -25,11 +25,13 @@
         onSubmit = (e) => {
           e.preventDefault(); // 새로고침 되지 않도록
           if (parseInt(this.state.value) === this.state.first * this.state.second) {
-            this.setState({
-              result: `${this.state.first * this.state.second} 정답!`,
-              first: Math.ceil(Math.random() * 9),
-              second: Math.ceil(Math.random() * 9),
-              value: "",
+            this.setState((prevState) => {
+              return {
+                result: `정답: ${prevState.value}`,
+                first: Math.ceil(Math.random() * 9),
+                second: Math.ceil(Math.random() * 9),
+                value: "",
+              };
             });
           } else {
             // first, second는 바뀌지 않음
