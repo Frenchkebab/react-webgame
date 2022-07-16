@@ -114,3 +114,7 @@ react에서는 `push`, `pop`, `shift`, `unshift`, `splice` 처럼 배열을 직�
       }
     </script>
 ```
+
+### 1-6) 구구단 만들기
+
+nothing special
