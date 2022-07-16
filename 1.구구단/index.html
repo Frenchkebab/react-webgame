@@ -33,6 +33,7 @@
                 value: "",
               };
             });
+            this.input.focus(); // <-
           } else {
             // first, second는 바뀌지 않음
             this.setState({
@@ -53,7 +54,14 @@
                 {this.state.first} X {this.state.second} is
               </div>
               <form onSubmit={this.onSubmit}>
-                <input type="number" value={this.state.value} onChange={this.onChange} />
+                <input
+                  ref={(c) => {
+                    this.input = c;
+                  }}
+                  type="number"
+                  value={this.state.value}
+                  onChange={this.onChange}
+                />
                 <button>입력!</button>
               </form>
               <div>{this.state.result}</div>

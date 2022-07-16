@@ -124,3 +124,98 @@ nothing special
 `button` 태그
 form이 있는 경우 : onSubmit()
 form이 없는 경우 : onClick()
+
+### 1-8) prevState
+
+이렇게 이전 state의 상태가 필요할 때에는 `prevState`를 인자로 받아오면 됨
+
+```javascript
+this.setState((prevState).value => {
+  return {
+    result: '정답: ' + prevState.value,
+    first: ...
+    second: ///
+    value: '',
+  }
+})
+```
+
+`setState`는 비동기로 진행되는데
+헷갈리니까 다음의 예시를 보자
+
+```javascript
+this.setState({
+  value: this.state.value + 1,
+});
+
+this.setState({
+  value: this.state.value + 1,
+});
+
+this.setState({
+  value: this.state.value + 1,
+});
+```
+
+새로운 value가 기존 value + 3이 될 것이라 예상되지만
+value + 1이 되는 경우도 있음.
+
+따라서 이렇게 하는 것이 가장 안전한 방법임.
+
+```javascript
+this.setState((prevState) => {
+  value: this.state.value + 1,
+});
+```
+
+### 1-9) input 박스에 focus 주기
+
+```javascript
+render() {
+  return (
+    <React.Fragment>
+      <div>
+        {this.state.first} X {this.state.second} is
+      </div>
+      <form onSubmit={this.onSubmit}>
+        <input
+          ref={(c) => {
+            this.input = c;
+          }}
+          type="number"
+          value={this.state.value}
+          onChange={this.onChange}
+        />
+        <button>입력!</button>
+      </form>
+      <div>{this.state.result}</div>
+    </React.Fragment>
+  );
+```
+
+이렇게 `input` 안에 ref 프로퍼티를 추가해주고
+
+```javascript
+onSubmit = (e) => {
+  e.preventDefault(); // 새로고침 되지 않도록
+  if (parseInt(this.state.value) === this.state.first * this.state.second) {
+    this.setState((prevState) => {
+      return {
+        result: `정답: ${prevState.value}`,
+        first: Math.ceil(Math.random() * 9),
+        second: Math.ceil(Math.random() * 9),
+        value: "",
+      };
+    });
+    this.input.focus(); // <-
+  } else {
+    // first, second는 바뀌지 않음
+    this.setState({
+      result: "땡",
+      value: "",
+    });
+  }
+};
+```
+
+`onSubmit`에서 실행되도록 함
