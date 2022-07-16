@@ -11,7 +11,8 @@
     <!-- 배포용 -->
     <!--<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>-->
     <!--<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>-->
-    <script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
       "use strict";
 
       // class는 거의 1%정도만 쓰임 (1% ErrorBoundary)
@@ -25,13 +26,17 @@
             return "You liked this.";
           }
 
-          return React.createElement("button", { onClick: () => this.setState({ liked: true }) }, "Like");
+          // return React.createElement("button", { onClick: () => this.setState({ liked: true }) }, "Like");
+          return <button onClick={() => this.setState({ liked: true })}>Like</button>;
         }
       }
     </script>
-    <script>
+    <script type="text/babel">
       // LikeButton 컴포넌트를 root 안에다 그림
-      ReactDOM.render(React.createElement(LikeButton), document.querySelector("#root"));
+      // ReactDOM.render(React.createElement(LikeButton), document.querySelector("#root")); // React 17버전 코드
+
+      // 헷갈리지 않도록 순서를 바꿔줌
+      ReactDOM.createRoot(document.querySelector("#root")).render(<LikeButton />); // React 18버전 코드 (18버전에서 가장 크게 달라진 점)
     </script>
   </body>
 </html>
