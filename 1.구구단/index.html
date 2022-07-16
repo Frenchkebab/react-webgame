@@ -46,7 +46,7 @@
 
         render() {
           return (
-            <div>
+            <React.Fragment>
               <div>
                 {this.state.first} X {this.state.second} is
               </div>
@@ -55,7 +55,7 @@
                 <button>입력!</button>
               </form>
               <div>{this.state.result}</div>
-            </div>
+            </React.Fragment>
           );
         }
       }

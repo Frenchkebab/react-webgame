@@ -118,3 +118,9 @@ react에서는 `push`, `pop`, `shift`, `unshift`, `splice` 처럼 배열을 직�
 ### 1-6) 구구단 만들기
 
 nothing special
+
+### 1-7) 이벤트 함수
+
+`button` 태그
+form이 있는 경우 : onSubmit()
+form이 없는 경우 : onClick()
