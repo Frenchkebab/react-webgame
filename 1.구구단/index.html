@@ -20,18 +20,38 @@
             result: "",
           };
         }
+
+        // 가급적 JSX와 javascript를 섞지 말고 이렇게 함수로 빼 놓을 것!
+        onSubmit = (e) => {
+          e.preventDefault(); // 새로고침 되지 않도록
+          if (parseInt(this.state.value) === this.state.first * this.state.second) {
+            this.setState({
+              result: `${this.state.first * this.state.second} 정답!`,
+              first: Math.ceil(Math.random() * 9),
+              second: Math.ceil(Math.random() * 9),
+              value: "",
+            });
+          } else {
+            // first, second는 바뀌지 않음
+            this.setState({
+              result: "땡",
+              value: "",
+            });
+          }
+        };
+
+        onChange = (e) => {
+          this.setState({ value: e.target.value });
+        };
+
         render() {
           return (
             <div>
               <div>
                 {this.state.first} X {this.state.second} is
               </div>
-              <form>
-                <input
-                  type="number"
-                  value={this.state.value}
-                  onChange={(e) => this.setState({ value: e.target.value })}
-                />
+              <form onSubmit={this.onSubmit}>
+                <input type="number" value={this.state.value} onChange={this.onChange} />
                 <button>입력!</button>
               </form>
               <div>{this.state.result}</div>
@@ -42,7 +62,14 @@
     </script>
     <script type="text/babel">
       // ReactDOM.createRoot(document.querySelector("#root")).render(<GuGuDan />);
-      ReactDOM.render(<GuGuDan />, document.querySelector("#root"));
+      ReactDOM.render(
+        <div>
+          <GuGuDan />
+          <GuGuDan />
+        </div>,
+
+        document.querySelector("#root")
+      );
     </script>
   </body>
 </html>
