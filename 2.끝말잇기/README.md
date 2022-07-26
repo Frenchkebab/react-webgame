@@ -186,3 +186,72 @@ module.exports = {
 
 `path` 부분은 그냥 외우자...
 `path.join`의 경우 `__dirname`과 `'dist'` 두 경로명을 합쳐준다!
+
+## 2-5) 웹팩으로 빌드하기
+
+### 1: command 등록이 되어 있지 않을 때
+
+```bash
+$ webpack
+zsh: command not found: webpack
+```
+
+**방법1)** `package.json`에 **script** 등록하기
+
+```json
+  "scripts": {
+    "dev": "webpack"
+  },
+```
+
+**방법2** `npx` 명령어 사용하기
+
+```bash
+$ npx webpack
+```
+
+### 2: 에러 해결하기
+
+```bash
+$ npx webpack
+asset app.js 1.53 KiB [compared for emit] (name: app)
+./client.jsx 180 bytes [built] [code generated] [1 error]
+
+ERROR in ./client.jsx 6:16
+Module parse failed: Unexpected token (6:16)
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+| const WordRelay = require('./WordRelay');
+|
+> ReactDom.render(<WordRelay />, document.querySelector('#root'));
+```
+
+Webpack이 JSX를 이해하지 못하여 생기는 문제.
+`Babel`을 설치한 후에, `Babel`이 JSX를 이해할 수 있도록 설정해 주어야 함
+
+```bash
+$ npm i -D @babel/core @babel/preset-env @babel/preset-react babel-loader
+```
+
+`@babel/core` : 기본적인 `babel` 내용들
+
+`@babel/preset-env` : 알아서 browser환경에 에 맞춰서 문법을 맞춰줌
+
+`@babel/preset-react` : JSX 등을 지원해줌
+
+`babel-loader` : `babel`과 `webpack`을 연결해줌
+
+### 3: react18버전에서 ReactDom.render 를 사용할 수 없었던 이슈
+
+```jsx
+const React = require('react');
+const ReactDOM = require('react-dom/client');
+
+const WordRelay = require('./WordRelay');
+
+// ReactDom.render(<WordRelay />, document.querySelector('#root'));
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<WordRelay />);
+```
+
+주석부분 대신 그 아래처럼 수정하였더니 정상 동작하였음.
