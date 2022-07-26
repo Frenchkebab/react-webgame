@@ -148,4 +148,41 @@ $ npm i -D webpack webpack-cli
 
 ### 3: 확장자
 
-`.js`대신에 `.jsx` 를 사용하는 것이
+`.js`대신에 `.jsx` 를 사용하는 것이 `react`를 사용한다는 것을 조금 더 명시할 수 있음
+
+## 2-4) 모듈 시스템과 웹팩 설정
+
+### 1: HTML은 js파일 하나만 가져올 수 있음
+
+-> `webpack`으로 합쳐서 하나로 만들어서 넣어주면 됨!
+
+### 2: 웹팩 config 설정
+
+```js
+const path = require('path');
+
+module.exports = {
+  name: 'wordrelay-setting',
+  mode: 'development', // 실서비스: production
+  devtool: 'eval',
+
+  // 이거 쓰면 entry에서 확장자명 안써도 알아서 찾아줌
+  resolve: {
+    extensions: ['.js', 'jsx']
+  }
+
+  // 입력
+  entry: {
+    app: ['./client'], // client에서 WordRelay를 불러오므로 webpack이 알아서 파악함
+  },
+
+  // 출력
+  output: {
+    path: path.join(__dirname, 'dist'), // /Users/frenchkebab/Dev/react/react-webgame/2.끝말잇기 + /dist
+    filename: 'app.js',
+  },
+};
+```
+
+`path` 부분은 그냥 외우자...
+`path.join`의 경우 `__dirname`과 `'dist'` 두 경로명을 합쳐준다!
