@@ -126,3 +126,26 @@ const onSubmitForm = (e) => {
 ```
 
 -> react가 알아서 비동기적으로 처리해줌 (`setState`를 몰아서 한 번에 처리될 수 있도록 처리해줌)
+
+## 2-3) 웹팩 설치하기
+
+### 1: 웹팩이 뭐임?
+
+100줄짜리 component 10개만 들어가도 1000줄이 넘어감...
+Facebook의 경우 component가 2만개라고 함
+
+그래서 중복을 제거해서 여러 개의 다른 js파일을 가져와서 하나의 파일로 합쳐주는 기술이 webpack임!
+
+### 2: 웹팩 설치
+
+```bash
+$ npm i react react-dom
+```
+
+```bash
+$ npm i -D webpack webpack-cli
+```
+
+### 3: 확장자
+
+`.js`대신에 `.jsx` 를 사용하는 것이
