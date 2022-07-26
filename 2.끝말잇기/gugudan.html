@@ -10,71 +10,27 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      class GuGuDan extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            first: Math.ceil(Math.random() * 9),
-            second: Math.ceil(Math.random() * 9),
-            value: "",
-            result: "",
-          };
-        }
+      // class GuGuDan extends React.Component {
+      //
+      // }
 
-        // 가급적 JSX와 javascript를 섞지 말고 이렇게 함수로 빼 놓을 것!
-        onSubmit = (e) => {
-          e.preventDefault(); // 새로고침 되지 않도록
-          if (parseInt(this.state.value) === this.state.first * this.state.second) {
-            this.setState((prevState) => {
-              return {
-                result: `정답: ${prevState.value}`,
-                first: Math.ceil(Math.random() * 9),
-                second: Math.ceil(Math.random() * 9),
-                value: "",
-              };
-            });
-            this.input.focus(); // <-
-          } else {
-            // first, second는 바뀌지 않음
-            this.setState({
-              result: "땡",
-              value: "",
-            });
-          }
-        };
+      const GuGuDan = () => {
+        const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+        const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+        const [value, setValue] = React.useState("");
+        const [result, setResult] = React.useState("");
 
-        onChange = (e) => {
-          this.setState({ value: e.target.value });
-        };
-
-        render() {
-          return (
-            <React.Fragment>
-              <div>
-                {this.state.first} X {this.state.second} is
-              </div>
-              <form onSubmit={this.onSubmit}>
-                <input
-                  ref={(c) => {
-                    this.input = c;
-                  }}
-                  type="number"
-                  value={this.state.value}
-                  onChange={this.onChange}
-                />
-                <button>입력!</button>
-              </form>
-              <div>{this.state.result}</div>
-            </React.Fragment>
-          );
-        }
-      }
+        return (
+          <div>
+            {first} {second} {value}
+          </div>
+        );
+      };
     </script>
     <script type="text/babel">
       // ReactDOM.createRoot(document.querySelector("#root")).render(<GuGuDan />);
       ReactDOM.render(
         <div>
-          <GuGuDan />
           <GuGuDan />
         </div>,
 
