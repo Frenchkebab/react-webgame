@@ -1,6 +1,6 @@
 # 3. 숫자야구
 
-## 2-1) import vs require
+## 3-1) import vs require
 
 ### require
 
@@ -35,3 +35,5 @@ module.exports = NumberBaseball;
 
 기본적으로 webpack은 node로 돌리기 때문에 `import`를 쓰면 에러가 남.
 -> **`babel`**이 `import`를 `require`로 바꾸어 줌
+
+## 3-2) react 반복문 (map)

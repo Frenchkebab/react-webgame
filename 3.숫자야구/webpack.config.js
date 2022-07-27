@@ -4,7 +4,7 @@ const RefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 // 여기 있는 것들은 다 이해하고 넘어가야 함!!
 module.exports = {
-  name: 'wordrelay-setting',
+  name: 'numberbaseball-setting',
   mode: 'development', // 실서비스: production
   devtool: 'eval',
 
@@ -15,7 +15,7 @@ module.exports = {
 
   // 입력
   entry: {
-    app: ['./client.jsx'],
+    app: ['./client'],
   },
 
   module: {

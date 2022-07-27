@@ -1,5 +1,6 @@
 const React = require('react');
-const ReactDom = require('react-dom');
+const ReactDOM = require('react-dom/client');
+
 const NumberBaseball = require('./NumberBaseball');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
