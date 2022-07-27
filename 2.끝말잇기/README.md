@@ -255,3 +255,54 @@ root.render(<WordRelay />);
 ```
 
 주석부분 대신 그 아래처럼 수정하였더니 정상 동작하였음.
+
+## 2-7) @babel/preset-env와 plugins
+
+### webpack.config
+
+```javascript
+  module: {
+    rules: [
+      {
+        test: /\.jsx?/, // jsx 파일에 적용을 함
+        loader: 'babel-loader', // babel-loader를 사용하여 최신 문법을 옛날 browser를 사용하더라도 호환
+        exclude: path.resolve(__dirname, 'node_modules/'),
+        options: {
+          presets: ['@babel/preset-env', '@babel/preset-react'],
+          plugins: ['@babel/plugin-proposal-class-properties'],
+        },
+      },
+    ],
+  },
+```
+
+여기에서
+
+```javascript
+        options: {
+          presets: ['@babel/preset-env', '@babel/preset-react'],
+          plugins: ['@babel/plugin-proposal-class-properties'],
+        },
+```
+
+preset들에 대한 세부 설정을 해주고 싶으면
+
+```javascript
+        options: {
+          presets: [
+            ['@babel/preset-env', {
+              targets: {
+                browsers: ['> 5% in KR', 'last 2 chrome versions'], // browserslist를 검색해서 참조하자
+              }
+            }]
+           '@babel/preset-react'
+           ],
+          plugins: ['@babel/plugin-proposal-class-properties'],
+        },
+```
+
+이렇게 배열의 처음에는 이름을, 두번째에는 세부 setting을 넣어준다.
+
+결국에는 `mode`, `entry`, `module`, `output`, `plugins` 가 메인임!
+
+**webpack.js.org** 공식문서를 참조하자!
