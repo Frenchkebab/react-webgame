@@ -306,3 +306,26 @@ preset들에 대한 세부 설정을 해주고 싶으면
 결국에는 `mode`, `entry`, `module`, `output`, `plugins` 가 메인임!
 
 **webpack.js.org** 공식문서를 참조하자!
+
+## 2-9) Webpack 데브 서버와 핫 리로딩
+
+### 패키지 설치
+
+```bash
+$ npm i -D react-refresh
+$ npm i -D @pmmmwh/react-refresh-webpack-plugin
+$ npm i -D webpack-dev-server
+```
+
+```json
+  "scripts": {
+    "dev": "webpack serve --env development"
+  },
+```
+
+### Webpack Dev Server의 역할
+
+build의 결과물을 저장해줌
+Hot Reloading - 소스코드가 수정되면 감지하여 수정해줌 (이전 데이터를 유지해줌)
+
+### path vs publicPath

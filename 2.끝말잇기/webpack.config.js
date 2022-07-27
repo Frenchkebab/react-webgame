@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const RefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 // 여기 있는 것들은 다 이해하고 넘어가야 함!!
 module.exports = {
@@ -36,16 +37,25 @@ module.exports = {
             ],
             '@babel/preset-react',
           ],
-          plugins: ['@babel/plugin-proposal-class-properties'],
+          plugins: ['@babel/plugin-proposal-class-properties', 'react-refresh/babel'],
         },
       },
     ],
   },
 
-  plugins: [new webpack.LoaderOptionsPlugin({ debug: true })],
+  plugins: [new RefreshWebpackPlugin()], // 빌드 시마다 이것이 실행됨
 
   // 출력
   output: {
     path: path.join(__dirname, 'dist'),
+    filename: 'app.js',
+    publicPath: '/dist/',
+  },
+
+  devServer: {
+    devMiddleware: { publicPath: '/dist' }, // webpack이 빌드한 파일들이 존재하는 경우
+    static: { directory: path.resolve(__dirname) },
+    // static: { directory: path.resolve(__dirname, 'src') }, // src 안에 index.html이 있는 경우
+    hot: true,
   },
 };
