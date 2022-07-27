@@ -37,3 +37,8 @@ module.exports = NumberBaseball;
 -> **`babel`**이 `import`를 `require`로 바꾸어 줌
 
 ## 3-2) react 반복문 (map)
+
+## 3-3) react 반복문 (key)
+
+`key`를 i로 놓으면 성능 최적화 이슈에 문제가 될 수 있다고 한다.
+(단, 삭제X 배열의 경우 괜찮음)
