@@ -328,4 +328,55 @@ $ npm i -D webpack-dev-server
 build의 결과물을 저장해줌
 Hot Reloading - 소스코드가 수정되면 감지하여 수정해줌 (이전 데이터를 유지해줌)
 
-### path vs publicPath
+### Controlled input vs Uncontrolled Input
+
+1. Controlled Input
+
+`value` **state**가 있고, `onChange`에서 `setValue`로 값을 바꿔주는 형태
+
+2. Uncontrolled Input
+   `input` 태그를 사용한 그냥 원시적인 형태
+
+onSubmit에서만 특정한 동작을 하는 경우 **Uncontrolled input**을 사용해도 됨.
+
+**Uncontrolled input**을 사용하면,
+
+```javascript
+...
+
+    e.target.children.word;
+    or
+    e.target[0]; 으로 접근이 가능
+
+...
+    <input id="word" />
+```
+
+https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
+
+해당 링크 참조
+
+### Controlled Input을 사용해야 하는 경우
+
+1. Instant Field Validation
+
+2. Conditionally disabling submit button
+   : 형식에 안맞으면 submit 버튼이 눌리지 않도록
+   (uncontrolled에서는 이것을 onSubmit에서 막음, but controlled에서는 버튼 자체가 눌리지 않도록)
+
+3. Enforcing input format
+   : 비밀번호 형식 등을 강제하는 경우
+
+4. Several inputs for one piece of data
+   : input 창이 여러개가 있는 경우 setState상에서 조합이 가능함
+
+5. Dynamic inputs
+   : 비밀번호 8자리 이상 입력해야함 -> 8자리 미만일 경우 빨간 밑줄
+
+### Uncontrolled Input을 사용해도 상관없는 경우
+
+1. One-time value retrieval
+
+2. Validating on submit
+
+=> Uncontrolled input은 그냥 안써도 됨....

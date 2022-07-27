@@ -10,14 +10,16 @@ const WordRelay = () => {
 
   onSubmitForm = (e) => {
     e.preventDefault();
-    if (word[word.length - 1] === value[0]) {
+    console.dir(e.target);
+    console.log(e.target.children.wordInput.value);
+    if (word[word.length - 1] === e.target.children.wordInput.value[0]) {
       setResult('딩동댕');
-      setWord(value);
-      setValue('');
+      setWord(e.target.children.wordInput.value);
+      e.target.children.wordInput.value = '';
       inputRef.current.focus();
     } else {
       setResult('땡');
-      setValue('');
+      e.target.children.wordInput.value = '';
       inputRef.current.focus();
     }
   };
@@ -31,7 +33,7 @@ const WordRelay = () => {
       <div>{word}</div>
       <form onSubmit={onSubmitForm}>
         <label htmlFor="wordInput">글자를 입력하세요</label>
-        <input id="wordInput" className="wordInput" ref={inputRef} value={value} onChange={onChangeInput} />
+        <input id="wordInput" className="wordInput" ref={inputRef} />
         <button>입력!</button>
       </form>
       <div>{result}</div>
