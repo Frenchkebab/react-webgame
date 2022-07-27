@@ -29,7 +29,7 @@ module.exports = {
               '@babel/preset-env',
               {
                 targets: {
-                  browsers: ['> 5% in KR', 'last 2 chrome extensions'], // browserslist 참조!
+                  browsers: ['> 5% in KR'], // browserslist 참조!
                 },
                 debug: true,
               },
