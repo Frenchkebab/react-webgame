@@ -60,3 +60,18 @@ constructor(props) {
   this.onChangeInput = this.onChangeInput.bind(this);
 }
 ```
+
+### 3-7) Tips
+
+### `this.state.xxx` 안쓰기
+
+```javascript
+const { result, value } = this.state;
+```
+
+이렇게 각 **state**를 변수로 빼놓을 수도 있다.
+**props**도 마찬가지임!
+
+### 함수를 컴포넌트 밖으로 빼는 경우
+
+별 상관 없음... 그냥 해당 컴포넌트 외에서도 사용하고 싶을 경우에 밖으로 빼놓으면 됨!
