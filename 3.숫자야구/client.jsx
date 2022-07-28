@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-import NumberBaseball from './NumberBaseball';
+import NumberBaseball from './RenderTest';
 // const NumberBaseball = require('./NumberBaseball');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

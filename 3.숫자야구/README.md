@@ -90,3 +90,32 @@ const [answer, setAnswer] = useState(getNumbers);
 
 이후에 `setAnswer`를 호출할 때에는 return 값을 넣어야 함!
 (사실 함수 자체를 넣어도 동작은 된다... 하지만 이건 그냥 얻어걸린거임)
+
+## 3-9) React Devtools
+
+`props`를 쓰면서 렌더링이 자주 일어나서 성능이 안좋아지는 문제를 찾고 해결하는 방법
+
+## 3-10) shouldComponentUpdate
+
+### setState만 있으면 re-render
+
+React는 멍청해서 다음과 같이 `setState`만 있으면 `state`가 바뀌지 않더라도 리렌더링이 일어난다.
+
+```javascript
+onClick = () => {
+  this.setState({});
+};
+```
+
+### shouldComponentUpdate
+
+따라서 다음과 같이 어떤 부분을 다시 rendering할지 직접 적어주어야 한다.
+
+```javascript
+shouldComponentUpdate(nextProps, nextState, nextContext) {
+  if(this.state.counter !== nextState.counter) {
+    return true;
+  }
+  return false;
+}
+```
