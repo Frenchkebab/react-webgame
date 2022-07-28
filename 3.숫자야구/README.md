@@ -75,3 +75,18 @@ const { result, value } = this.state;
 ### 함수를 컴포넌트 밖으로 빼는 경우
 
 별 상관 없음... 그냥 해당 컴포넌트 외에서도 사용하고 싶을 경우에 밖으로 빼놓으면 됨!
+
+## 3-8 숫자야구 Hooks 전환
+
+### setState에 함수를 넣을 때 (lazy init)
+
+```javascript
+const [answer, setAnswer] = useState(getNumbers);
+```
+
+이렇게 함수 자체를 넣어주면 리턴값이 들어가고, 그 다음부터는 실행되지 않음.
+`useState(getNumbers())`될 경우 리렌더링이 될 때마다 쓸데없이 새로 실행된다
+(그냥 값을 무시함)
+
+이후에 `setAnswer`를 호출할 때에는 return 값을 넣어야 함!
+(사실 함수 자체를 넣어도 동작은 된다... 하지만 이건 그냥 얻어걸린거임)
