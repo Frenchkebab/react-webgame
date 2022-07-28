@@ -119,3 +119,51 @@ shouldComponentUpdate(nextProps, nextState, nextContext) {
   return false;
 }
 ```
+
+## 3-11) PureComponent & Memo - 억울한 자식 리렌더링 막기
+
+### PureComponent를 사용하면 shouldComponentUpdate를 자동으로 해결해준다
+
+```javascript
+class Test extends PureComponent ...
+```
+
+다만
+
+```javascript
+setState({ a: 1 });
+```
+
+과 같은 경우 매번 새로 렌더링하므로 `state`에 `object` 구조는 가급적 쓰지 않는 것이 좋다!
+
+가급적 배열 안에 객체 안에 배열 등 복잡한 자료구조는 사용하지 않는 것이 좋다!
+
+### 자식이 re-rendering되는 경우
+
+`state`, `props` 가 바뀌는 경우 외에도,
+**부모 component\***가 re-rendering 되면 자식 component도 rerendering 된다
+
+**input** 입력만 되었는데도 아래의 `Try` 까지 적용이 된다.
+
+### functional component에서는 PureComponent 대신 memo를 사용
+
+```javascript
+import React, { memo } from 'react';
+
+const Try = memo(({ tryInfo }) => {
+  return (
+    <li>
+      <div>{tryInfo.try}</div>
+      <div>{tryInfo.result}</div>
+    </li>
+  );
+});
+
+Try.displayName = 'Try';
+```
+
+이렇게 작성하면 memo가 부모 component가 리렌더링 되었을 때, 자식 component가 리렌더링 되는 것을 막아준다!
+
+memo를 쓸 경우 `displayName`도 설정을 해 주어야 component의 이름이 바뀌지 않는다!
+
+---하지만 성능 문제가 없다면 굳이 쓰지 않아도 됨---
