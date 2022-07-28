@@ -22,21 +22,25 @@ class NubmerBaseball extends Component {
     { fruit: '사과', taste: '맛없다' },
   ];
 
-  onSubmitForm = () => {};
+  onSubmitForm = () => {
+    e.preventDefault();
+  };
 
-  onChangeINput = () => {};
+  onChangeInput = (e) => {
+    setValue(e.target.value);
+  };
 
   render() {
     return (
       <>
         <h1>{this.state.result}</h1>
         <form onSubmit={this.onSubmitForm}>
-          <input maxLength={4} value={this.state.value} onChange={this.state.value} />
+          <input maxLength={4} value={this.state.value} onChange={this.onChangeInput} />
         </form>
         <div>시도: {this.state.tries.length}</div>
         <ul>
           {this.fruits.map((el, i) => {
-            return <Try value={el} index={i} />;
+            return <Try key={el.fruit + el.taste} value={el} index={i} />;
           })}
         </ul>
       </>

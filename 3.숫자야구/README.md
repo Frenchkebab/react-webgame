@@ -42,3 +42,21 @@ module.exports = NumberBaseball;
 
 `key`를 i로 놓으면 성능 최적화 이슈에 문제가 될 수 있다고 한다.
 (단, 삭제X 배열의 경우 괜찮음)
+
+## 3-4) 주석과 Method 바인딩
+
+핸들러 함수들을 화살표 함수로 쓰지 않으면 constructor에 전부 해당 `class`를 `this`로 바인딩 해주어야 함
+
+```javascript
+constructor(props) {
+  super(props);
+  this.state = {
+    result: '',
+    value: '',
+    answer: getNumbers(),
+    tries: [],
+  };
+  this.onSubmitForm = this.onSubmitForm.bind(this);
+  this.onChangeInput = this.onChangeInput.bind(this);
+}
+```
