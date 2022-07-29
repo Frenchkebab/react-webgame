@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-const { Component } = require('react');
+import React, { useState, useRef } from 'react';
 import Try from './Try';
 
 // get 4 numbers randomly
@@ -17,6 +16,7 @@ const NubmerBaseball = () => {
   const [value, setValue] = useState('');
   const [answer, setAnswer] = useState(getNumbers);
   const [tries, setTries] = useState([]);
+  const inputEl = useRef(null);
 
   const onSubmitForm = (e) => {
     e.preventDefault();
@@ -28,6 +28,7 @@ const NubmerBaseball = () => {
       setValue('');
       setAnswer(getNumbers());
       setTries([]);
+      inputEl.current.focus();
     } else {
       const answerArray = value.split('').map((v) => parseInt(v));
       let strike = 0;
@@ -39,6 +40,7 @@ const NubmerBaseball = () => {
         setValue('');
         setAnswer(getNumbers());
         setTries([]);
+        inputEl.current.focus();
       } else {
         for (let i = 0; i < 4; i++) {
           if (answerArray[i] === answer[i]) {
@@ -48,6 +50,8 @@ const NubmerBaseball = () => {
           }
         }
         setTries((prevTries) => [...prevTries, { try: value, result: `${strike} 스트라이크, ${ball} 볼입니다` }]);
+        setValue('');
+        inputEl.current.focus();
       }
     }
   };

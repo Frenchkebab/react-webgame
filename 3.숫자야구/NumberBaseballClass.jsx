@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import Try from './Try';
 
 // get 4 numbers randomly
@@ -42,6 +42,7 @@ class NubmerBaseball extends Component {
         answer: getNumbers(),
         tries: [],
       });
+      this.inputRef.current.focus();
     } else {
       const answerArray = this.state.value.split('').map((v) => parseInt(v));
       let strike = 0;
@@ -57,6 +58,7 @@ class NubmerBaseball extends Component {
           answer: getNumbers(),
           tries: [],
         });
+        this.inputRef.current.focus();
       } else {
         for (let i = 0; i < 4; i++) {
           if (answerArray[i] === this.state.answer[i]) {
@@ -68,6 +70,7 @@ class NubmerBaseball extends Component {
             tries: [...this.state.tries, { try: this.state.value, result: `${strike} 스트라이크, ${ball} 볼입니다` }],
           });
         }
+        this.inputRef.current.focus();
       }
     }
   };
@@ -79,12 +82,14 @@ class NubmerBaseball extends Component {
     });
   };
 
+  inputRef = createRef();
+
   render() {
     return (
       <>
         <h1>{this.state.result}</h1>
         <form onSubmit={this.onSubmitForm}>
-          <input maxLength={4} value={this.state.value} onChange={this.onChangeInput} />
+          <input ref={this.inputRef} maxLength={4} value={this.state.value} onChange={this.onChangeInput} />
         </form>
         <div>시도: {this.state.tries.length}</div>
         <ul>
