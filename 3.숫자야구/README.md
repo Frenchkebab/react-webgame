@@ -167,3 +167,31 @@ Try.displayName = 'Try';
 memo를 쓸 경우 `displayName`도 설정을 해 주어야 component의 이름이 바뀌지 않는다!
 
 ---하지만 성능 문제가 없다면 굳이 쓰지 않아도 됨---
+
+## 3-13) props와 state 연결하기
+
+### render 안에 this.setstate를 넣는 경우
+
+`setState`를 실행하면 다시 `render`가 실행되고, `render`가 실행되면 다시 `setState`가 실행되고 무한반복됨...
+
+### props와 state 연결하기
+
+부모가 물려준 `props`를 다시 state로 만들어준다.
+부모의 `setState`를 사용해버리면, 뜻하지않게 자식이 바뀌었을 때 부모까지 바뀔 수 있다.
+
+```javascript
+const Try = memo(({ tryInfo }) => {
+  const [result, setResult] = useState(tryInfo.result);
+
+  const onclick = () => {
+    setResult('1');
+  };
+
+  return (
+    <li>
+      <div>{tryInfo.try}</div>
+      <div onClick={onClick}>{tryInfo.result}</div>
+    </li>
+  );
+});
+```
