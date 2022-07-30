@@ -84,3 +84,34 @@ useEffect(() => {
   };
 }, [imgCoord]);
 ```
+
+useEffect를 여러번 쓰는 경우도 있음
+
+```javascript
+// componentDidMount, componentDidUpdate, componentWillUnmount 역할 (1:1 대응은 아님)
+useEffect(() => {
+  // componentDidMount 역할
+  interval.current = setInterval(changeHand, 100);
+
+  // componentWillUnmount 역할
+  return () => {
+    clearInterval(interval.current);
+  };
+}, [score]);
+```
+
+와 같이..
+
+## 5-6) class와 hooks의 lifecycle 비교
+
+### useEffect 조금 더 쉽게 이해하기
+
+```javascript
+//                         result   imgCoord    score
+// componentDidMount
+// componentDidUpdate
+// componentWillUnmount
+```
+
+**class** 에서는 가로로(componentDidMount, componentDidUpdate, componentWillUnmount가 result, imgCoord, score 모두 처리),
+**hookss**에서는 세로로 돌아간다고 생각하면 됨 (result, imgCoord, score 각각이 componentDidMount, componentDidUpdate, componentWillUnmount모두를 사용함)
