@@ -37,3 +37,31 @@ constructor(state 설정 포함) -> 첫 렌더링 -> ref -> `componentDidMount`
 ### componentDidMount
 
 보통 **비동기** 요청을 많이함
+
+## 5-4) 고차 함수
+
+### React에서 자주 쓰이는 고차함수 패턴
+
+`onClick`함수에는 `event`가 인자로 전달되므로 이렇게 작성을 하거나
+
+```javascript
+<button id="rock" className="btn" onClick={() => this.onClickBtn('바위')}>
+```
+
+```javascript
+onClickBtn = (choice) => {
+  ...
+};
+```
+
+아예 이렇게 함수만 넣어주고 이런 패턴으로 많이 사용을 하게된다.
+
+```javascript
+<button id="rock" className="btn" onClick={this.onClickBtn('바위')}>
+```
+
+```javascript
+onClickBtn = (choice) => (e) => {
+ ...
+};
+```
