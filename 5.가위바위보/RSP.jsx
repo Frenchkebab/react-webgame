@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import useInterval from './useInterval';
 
 const rspCoords = {
   바위: '0',
@@ -22,21 +23,21 @@ const RSP = () => {
   const [result, setResult] = useState('');
   const [imgCoord, setImgCoord] = useState(rspCoords.바위);
   const [score, setScore] = useState(0);
-  const interval = useRef();
+  const [isRunning, setIsRunning] = useState(true);
 
-  // componentDidMount, componentDidUpdate, componentWillUnmount 역할 (1:1 대응은 아님)
-  // 전체 코드가 계속 실행이 됨 (componentDidMount와 componentWillUnmount가 매번 실행되는 것과 같음)
-  // [] => 처음에만 실행하고 다시 실행하지 않음
-  useEffect(() => {
-    // componentDidMount 역할
-    interval.current = setInterval(changeHand, 100);
+  // // componentDidMount, componentDidUpdate, componentWillUnmount 역할 (1:1 대응은 아님)
+  // // 전체 코드가 계속 실행이 됨 (componentDidMount와 componentWillUnmount가 매번 실행되는 것과 같음)
+  // // [] => 처음에만 실행하고 다시 실행하지 않음
+  // useEffect(() => {
+  //   // componentDidMount 역할
+  //   interval.current = setInterval(changeHand, 100);
 
-    // componentWillUnmount 역할
-    return () => {
-      clearInterval(interval.current);
-    };
-    // imgCoord가 바뀌면 다시 실행함 (changeHand에서 imgCoord를 바꾸어줌) - componentDidUpdate의 역할
-  }, [imgCoord]);
+  //   // componentWillUnmount 역할
+  //   return () => {
+  //     clearInterval(interval.current);
+  //   };
+  //   // imgCoord가 바뀌면 다시 실행함 (changeHand에서 imgCoord를 바꾸어줌) - componentDidUpdate의 역할
+  // }, [imgCoord]);
 
   const changeHand = () => {
     if (imgCoord === rspCoords.바위) {
@@ -48,23 +49,28 @@ const RSP = () => {
     }
   };
 
+  useInterval(changeHand, isRunning ? 100 : null);
+
   const onClickBtn = (choice) => () => {
-    clearInterval(interval);
-    const myScore = scores[choice];
-    const cpuScore = scores[computerChoice(imgCoord)];
-    const diff = myScore - cpuScore;
-    if (diff === 0) {
-      setResult('비겼습니다!');
-    } else if ([-1, 2].includes(diff)) {
-      setResult('이겼습니다!');
-      setScore((prevScore) => prevScore + 1);
-    } else {
-      setResult('졌습니다!');
-      setScore((prevScore) => prevScore - 1);
+    // 멈췄을 때 또 클릭하는 것 막기
+    if (isRunning) {
+      setIsRunning(false);
+      const myScore = scores[choice];
+      const cpuScore = scores[computerChoice(imgCoord)];
+      const diff = myScore - cpuScore;
+      if (diff === 0) {
+        setResult('비겼습니다!');
+      } else if ([-1, 2].includes(diff)) {
+        setResult('이겼습니다!');
+        setScore((prevScore) => prevScore + 1);
+      } else {
+        setResult('졌습니다!');
+        setScore((prevScore) => prevScore - 1);
+      }
+      setTimeout(() => {
+        setIsRunning(true);
+      }, 1000);
     }
-    setTimeout(() => {
-      interval = setInterval(changeHand, 100);
-    }, 1000);
   };
 
   return (

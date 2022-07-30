@@ -115,3 +115,66 @@ useEffect(() => {
 
 **class** 에서는 가로로(componentDidMount, componentDidUpdate, componentWillUnmount가 result, imgCoord, score 모두 처리),
 **hookss**에서는 세로로 돌아간다고 생각하면 됨 (result, imgCoord, score 각각이 componentDidMount, componentDidUpdate, componentWillUnmount모두를 사용함)
+
+## 5-7) 커스텀 훅으로 우아하게 interval하기 (몬소리??)
+
+이렇게 커스텀 훅을 만들어서 사용할 수도 있다
+
+```javascript
+import { useRef, useEffect } from 'react';
+
+// const [isRunning, setRunning] = useState(true);
+// useInterval (() => {
+//  console.log('hello');
+// }, isRunning ? 1000 : null)
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  });
+
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+
+  return savedCallback.current;
+}
+
+export default useInterval;
+```
+
+왜 `tick()` 으로 한번 더 감쌀까..?
+아래와 같이 이렇게 간단하게 코드를 짜도 될 것 같은데...
+
+```javascript
+function useInterval((callback, delay) {
+  useEffect(() => {
+    if(delay !== null) {
+      let id = setInterval(callback, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay, callback]); // 이렇게 하면 callback이 바뀔 때도 setInterval과 clearInterval이 한 번씩 호출이 됨
+  return callback;
+});
+```
+
+callback함수를 따로 다른 함수로 감싸주지 않으면
+
+1초 뒤에 가위
+1.1초 뒤에 changeHand
+2.1초 뒤에 바위
+2.2초 뒤에 changeHand
+3.2초 뒤에 보
+
+callback이 바뀜에 따라서 setInterval하고 clearInterval하는 잠깐의 시간 만큼씩 딜레이가 발생함
+
+원래의 코드에서는 `changeHand`가 바뀌든 말든 항상 최신 **callback** 함수만 받음
