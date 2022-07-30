@@ -65,3 +65,22 @@ onClickBtn = (choice) => (e) => {
  ...
 };
 ```
+
+## 5-5) Hooks로 바꾸기
+
+### componentDidMount와 componentWillUnmount 대체하기
+
+**Hooks**에서는 `useEffect`를 사용하여 대체한다!
+
+```javascript
+// componentDidMount, componentDidUpdate, componentWillUnmount 역할 (1:1 대응은 아님)
+useEffect(() => {
+  // componentDidMount 역할
+  interval.current = setInterval(changeHand, 100);
+
+  // componentWillUnmount 역할
+  return () => {
+    clearInterval(interval.current);
+  };
+}, [imgCoord]);
+```
