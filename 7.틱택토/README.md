@@ -18,3 +18,10 @@ redux의 기능을 react를 쓸 수 있다.
 (`td` -> `Td` -> `Tr` -> `Table` -> `TicTacTo`)
 
 그리고 전해주어야 할 것이 너무 많다 (**state**까지 모두 전달해 주어야 함)
+
+### dispatch와 reducer
+
+`state`가 있고 `event`들이 웹서비스에서 발생을 하게 되는데,
+`state`를 수정하려면 `action`을 만들고 그 `action`을 `dispatch`해서 그것을
+`reducer`로 관리를 함
+(`state`를 어떻게 바꿀 지는 `reducer`에 기록을 함)
