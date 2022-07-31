@@ -80,3 +80,6 @@ td -> tr -> table 순으로 전부 하나씩 memo를 적용하도록 한다
 ### memo를 해도 자꾸 렌더링이 되는 것 같을 때
 
 **최후의 수단**으로 `useMemo`를 사용하여 컴포넌트 전체를 기억해버린다.
+
+https://velog.io/@sunkim/React.memo-useMemo-useCallback-%EC%97%AD%ED%95%A0-%EB%B0%8F-%EC%B0%A8%EC%9D%B4%EC%A0%90
+해당 블로그 참조하기
