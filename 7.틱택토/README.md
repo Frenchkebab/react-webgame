@@ -34,3 +34,15 @@ state가 동기적으로 바뀌는 redux와는 다르게 `useReducer`에서는 �
 `changeTurn`에서 state를 O -> X로 바꾸었더라도 console을 찍으면 O로 나온다.
 
 ### 비동기 state를 처리할 때에는 useEffect를 처리하자!
+
+## 7-4 틱택토 구현하기
+
+### 정리
+
+`state`가 너무 많아지면 복잡해지므로, 한방에 모아서 `state`를 모아서 처리함.
+`setState`도 `dispatch`로 한방에 모아서 처리하기 위해 `useReducer`를 사용함. (이것은 redux에서 따온 개념)
+
+앞으로는 `state`를 하나로 모아놓고, `action`(객체)을 통해서 `dispatch`하면 `reducer`에 정의된 대로
+`state`를 변경시킴. (이 때 불변성이 중요!)
+
+따라서 `state`가 많아지는 경우 `useReducer`를 항상 고려하도록 하자!
