@@ -25,3 +25,12 @@ redux의 기능을 react를 쓸 수 있다.
 `state`를 수정하려면 `action`을 만들고 그 `action`을 `dispatch`해서 그것을
 `reducer`로 관리를 함
 (`state`를 어떻게 바꿀 지는 `reducer`에 기록을 함)
+
+## 7-4. 틱택토 구현하기
+
+### dispatch는 비동기
+
+state가 동기적으로 바뀌는 redux와는 다르게 `useReducer`에서는 리액트의 state처럼 비동기적으로 바뀐다.
+`changeTurn`에서 state를 O -> X로 바꾸었더라도 console을 찍으면 O로 나온다.
+
+### 비동기 state를 처리할 때에는 useEffect를 처리하자!
