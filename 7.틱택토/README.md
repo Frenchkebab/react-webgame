@@ -46,3 +46,37 @@ state가 동기적으로 바뀌는 redux와는 다르게 `useReducer`에서는 �
 `state`를 변경시킴. (이 때 불변성이 중요!)
 
 따라서 `state`가 많아지는 경우 `useReducer`를 항상 고려하도록 하자!
+
+## 7-5 렌더링 최적화 방법
+
+### useEffect와 useRef로 어느 부분이 바뀌는지를 테스트하기
+
+```javascript
+const ref = useRef([]);
+useEffect(() => {
+  console.log(
+    rowIndex === ref.current[0],
+    cellIndex === ref.current[1],
+    dispatch === ref.current[2],
+    cellData === ref.current[3]
+  );
+  console.log(celldata, ref.current[3]);
+  ref.current = [rowIndex, cellIndex, dispatch, cellData];
+}, [rowIndex, cellIndex, dispatch, cellData]);
+```
+
+이렇게 모든 props를 넣어서 바뀌는 부분이 있는지를 검사해 본다.
+
+여기서는 `true ture ture false`가 나오므로,
+`cellData`만 바뀌는 것을 알 수 있다. (정상적으로 cellData만 우리가 원하는 대로 바뀌므로 문제가 없는 것을 알 수 있음)
+
+근데 전체가 리렌더링되므로 부모인 `Tr` 컴포넌트에서 강제로 자식까지 렌더링을 하는 것 같다.
+
+(결국 못찾음)
+
+td -> tr -> table 순으로 전부 하나씩 memo를 적용하도록 한다
+(memo, useMemo 차이점 찾아보기)
+
+### memo를 해도 자꾸 렌더링이 되는 것 같을 때
+
+**최후의 수단**으로 `useMemo`를 사용하여 컴포넌트 전체를 기억해버린다.
