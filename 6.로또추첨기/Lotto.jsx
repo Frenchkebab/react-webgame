@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import Ball from './Ball';
 
 function getWinNumbers() {
@@ -16,8 +16,9 @@ function getWinNumbers() {
 }
 
 const Lotto = () => {
-  const [winNumbers, setWinNumbers] = useState(getWinNumbers());
   const [winBalls, setWinBalls] = useState([]);
+  const lottoNumbers = useMemo(() => getWinNumbers(), []); // Hooks는 순서가 중요함!
+  const [winNumbers, setWinNumbers] = useState(lottoNumbers);
   const [bonus, setBonus] = useState(null);
   const [redo, setRedo] = useState(false);
   const timeouts = useRef([]);
@@ -34,14 +35,15 @@ const Lotto = () => {
     }, 7000);
   };
 
-  const onClickRedo = () => {
-    console.log('onClickred');
+  const onClickRedo = useCallback(() => {
+    console.log('onClickRedo');
+    console.log(winNumbers);
     setWinNumbers(getWinNumbers());
     setWinBalls([]);
     setBonus(null);
     setRedo(false);
     timeouts.current = [];
-  };
+  }, [winNumbers]);
 
   // input이 빈배열이면 componentDidMount와 동일
   // 배열에 요소가 있으면 componentDidMount와 componentDidUpdate 모두 수행
@@ -65,7 +67,7 @@ const Lotto = () => {
       </div>
       <div>보너스!</div>
       {bonus && <Ball number={bonus} />}
-      <button onClick={redo ? onClickRedo : () => {}}>한 번 더!</button>
+      {redo && <button onClick={redo ? onClickRedo : () => {}}>한 번 더!</button>}
     </>
   );
 
