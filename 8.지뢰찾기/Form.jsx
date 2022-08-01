@@ -1,10 +1,11 @@
-import { useState, useCallback, useContext } from 'react'; // 콜백함수는 웬만하면 useCallback으로 감싸주는 습관 들일것
-import { TableContext } from './MineSearch';
+import React, { useState, useCallback, useContext } from 'react'; // 콜백함수는 웬만하면 useCallback으로 감싸주는 습관 들일것
+import { START_GAME, TableContext } from './MineSearch';
 
 const Form = () => {
   const [row, setRow] = useState(10);
   const [cell, setCell] = useState(10);
   const [mine, setMine] = useState(20);
+  console.log(useContext(TableContext));
   const { dispatch } = useContext(TableContext);
 
   const onChangeRow = useCallback((e) => {
@@ -26,6 +27,7 @@ const Form = () => {
       <input type="number" placeholder="세로" value={row} onChange={onChangeRow} />
       <input type="number" placeholder="가로" value={cell} onChange={onChangeCell} />
       <input type="number" placeholder="지뢰" value={mine} onChange={onChangeMine} />
+      <button onClick={onClickBtn}>시작</button>
     </div>
   );
 };
