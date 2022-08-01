@@ -54,7 +54,7 @@ const getTdText = (code) => {
     case CODE.QUESTION:
       return '?';
     default:
-      return '';
+      return code || '';
   }
 };
 

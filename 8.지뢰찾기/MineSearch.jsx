@@ -82,6 +82,35 @@ const reducer = (state, action) => {
       const tableData = [...state.tableData];
       tableData[action.row] = [...state.tableData[action.row]];
       tableData[action.row][action.cell] = CODE.OPENED;
+      let around = [];
+      if (tableData[action.row - 1]) {
+        // 윗줄이 있는 경우
+
+        // 윗줄 세 칸
+        around = around.concat(
+          tableData[action.row - 1][action.cell - 1],
+          tableData[action.row - 1][action.cell],
+          tableData[action.row - 1][action.cell + 1]
+        );
+      }
+      // 왼쪽, 오른쪽
+      around = around.concat(tableData[action.row][action.cell - 1], tableData[action.row][action.cell + 1]);
+
+      if (tableData[action.row + 1]) {
+        // 아랫줄이 있는 경우
+
+        // 아랫줄 세 칸
+        around = around.concat(
+          tableData[action.row + 1][action.cell - 1],
+          tableData[action.row + 1][action.cell],
+          tableData[action.row + 1][action.cell + 1]
+        );
+      }
+
+      const count = around.filter((v) => [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)).length;
+      console.log(around, count);
+      tableData[action.row][action.cell] = count;
+
       return {
         ...state,
         tableData,
