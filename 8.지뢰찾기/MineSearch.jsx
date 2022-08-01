@@ -16,6 +16,7 @@ export const CODE = {
 
 export const TableContext = createContext({
   tableData: [],
+  halted: true,
   dispatch: () => {},
 });
 
@@ -23,6 +24,7 @@ const initialState = {
   tableData: [],
   timer: 0,
   result: '',
+  halted: true,
 };
 
 // 지뢰를 심어줌
@@ -61,6 +63,11 @@ const plantMine = (row, cell, mine) => {
 
 // actions
 export const START_GAME = 'START_GAME';
+export const OPEN_CELL = 'OPEN_CELL';
+export const CLICK_MINE = 'CLICK_MINE';
+export const FLAG_CELL = 'FLAG_CELL';
+export const QUESTION_CELL = 'QUESTION_CELL';
+export const NORMALIZE_CELL = 'NORMALIZE_CELL';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -68,7 +75,76 @@ const reducer = (state, action) => {
       return {
         ...state,
         tableData: plantMine(action.row, action.cell, action.mine),
+        halted: false,
       };
+
+    case OPEN_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      tableData[action.row][action.cell] = CODE.OPENED;
+      return {
+        ...state,
+        tableData,
+      };
+    }
+
+    case CLICK_MINE: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      tableData[action.row][action.cell] = CODE.CLICKED_MINE;
+      return {
+        ...state,
+        tableData,
+        halted: true,
+      };
+    }
+
+    // 겉보기에는 똑같음
+    case FLAG_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      if (tableData[action.row][action.cell] === CODE.MINE) {
+        // 지뢰가 있는 칸인 경우
+        tableData[action.row][action.cell] = CODE.FLAG_MINE;
+      } else {
+        // 지뢰가 없는 칸인 경우
+        tableData[action.row][action.cell] = CODE.FLAG;
+      }
+      return {
+        ...state,
+        tableData,
+      };
+    }
+
+    // 깃발이 있는 상태에서 물음표로 만들기 - 겉보기에는 똑같음
+    case QUESTION_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      if (tableData[action.row][action.cell] === CODE.FLAG_MINE) {
+        tableData[action.row][action.cell] = CODE.QUESTION_MINE;
+      } else {
+        tableData[action.row][action.cell] = CODE.QUESTION;
+      }
+      return {
+        ...state,
+        tableData,
+      };
+    }
+
+    case NORMALIZE_CELL: {
+      const tableData = [...state.tableData];
+      tableData[action.row] = [...state.tableData[action.row]];
+      if (tableData[action.row][action.cell] === CODE.QUESTION_MINE) {
+        tableData[action.row][action.cell] = CODE.MINE;
+      } else {
+        tableData[action.row][action.cell] = CODE.NORMAL;
+      }
+      return {
+        ...state,
+        tableData,
+      };
+    }
+
     default:
       return state;
   }
@@ -76,21 +152,23 @@ const reducer = (state, action) => {
 
 const MineSearch = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { tableData, halted, timer, result } = state;
 
   const value = useMemo(
     () => ({
-      tableData: state.tableData,
+      tableData: tableData,
+      halted: halted,
       dispatch,
     }),
-    [state.tableData]
+    [tableData, halted]
   ); // dispatch는 항상 같게 유지되기 때문에 넣지 않아도 된다
 
   return (
     <TableContext.Provider value={value}>
       <Form />
-      <div>{state.timer}</div>
+      <div>{timer}</div>
       <Table />
-      <div>{state.result}</div>
+      <div>{result}</div>
     </TableContext.Provider>
   );
 };
