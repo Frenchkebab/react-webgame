@@ -22,9 +22,15 @@ export const TableContext = createContext({
 
 const initialState = {
   tableData: [],
+  data: {
+    row: 0,
+    cell: 0,
+    mine: 0,
+  },
   timer: 0,
   result: '',
   halted: true,
+  openedCount: 0,
 };
 
 // 지뢰를 심어줌
@@ -74,6 +80,12 @@ const reducer = (state, action) => {
     case START_GAME:
       return {
         ...state,
+        // 게임 스타트 시 초기 세팅에 대한 데이터를 넣어둠
+        data: {
+          row: action.row,
+          cell: action.cell,
+          mine: action.mine,
+        },
         tableData: plantMine(action.row, action.cell, action.mine),
         halted: false,
       };
@@ -89,6 +101,9 @@ const reducer = (state, action) => {
       // 한 번 검사한 칸은 다시 재귀에서 검사하지 않도록
       const checked = [];
 
+      // 칸 개수를 세서 다열면 게임 종료
+      let count = 0;
+
       // 주변 칸들을 검사하는 함수
       const checkAround = (row, cell) => {
         if (
@@ -103,13 +118,14 @@ const reducer = (state, action) => {
           return;
         }
 
-        if (checked.includes(row + ',' + cell)) {
+        if (checked.includes(row + '/' + cell)) {
           // 이미 검사한 칸이면
           return;
         } else {
           // 검사하지 않은 칸이면
-          checked.push(row + ',' + cell);
+          checked.push(row + '/' + cell);
         }
+        count++;
 
         let around = [tableData[row][cell - 1], tableData[row][cell + 1]];
         if (tableData[row - 1]) {
@@ -130,6 +146,7 @@ const reducer = (state, action) => {
         const count = around.filter((v) => [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)).length;
         console.log(around, count);
         tableData[row][cell] = count;
+
         if (count === 0) {
           // 내가 빈칸일 경우 주변 애들을 검사
           const near = [];
@@ -168,9 +185,11 @@ const reducer = (state, action) => {
 
       // 해당 칸 기준으로 검사
       checkAround(action.row, action.cell);
+
       return {
         ...state,
         tableData,
+        openedCount: state.openedCount + count,
       };
     }
 
