@@ -58,7 +58,7 @@ const getTdText = (code) => {
       return '?';
 
     default:
-      return '';
+      return code || ''; // 주변 지뢰 개수가 0인 경우 빈 문자열을 출력
   }
 };
 

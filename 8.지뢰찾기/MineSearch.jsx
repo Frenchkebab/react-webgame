@@ -53,6 +53,36 @@ const reducer = (state, action) => {
       const tableData = [...state.tableData]; // tableData 얕은 복사
       tableData[action.row] = [...state.tableData[action.row]]; // 클릭한 줄을 다시 얕은 복사 (윗줄에서는 참조 상태)
       tableData[action.row][action.cell] = CODE.OPENED; // 클릭한 셀을 OPENED로 변경 -> 이 action을 Td에서 dispatch
+
+      // 상하좌우대각선 8칸 검사
+
+      let around = [];
+
+      // 윗줄이 있는 경우
+      if (tableData[action.row - 1]) {
+        around = around.concat(
+          tableData[action.row - 1][action.cell - 1],
+          tableData[action.row - 1][action.cell],
+          tableData[action.row - 1][action.cell + 1]
+        );
+      }
+
+      // 좌우는 검사할 필요 없음 (어차피 action.row는 존재하므로 undefined)
+      around = around.concat(tableData[action.row][action.cell - 1], tableData[action.row][action.cell + 1]);
+
+      // 아랫줄이 있는 경우
+      if (tableData[action.row + 1]) {
+        around = around.concat(
+          tableData[action.row + 1][action.cell - 1],
+          tableData[action.row + 1][action.cell],
+          tableData[action.row + 1][action.cell + 1]
+        );
+      }
+
+      const count = around.filter((v) => [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)).length;
+      console.log(count);
+      tableData[action.row][action.cell] = count; // 해당 개수를 칸에 넣어줌
+
       // tableData를 변경함
       return {
         ...state,
@@ -64,6 +94,7 @@ const reducer = (state, action) => {
       const tableData = [...state.tableData];
       tableData[action.row] = [...state.tableData[action.row]];
       tableData[action.row][action.cell] = CODE.CLICKED_MINE;
+
       return {
         ...state,
         tableData,
