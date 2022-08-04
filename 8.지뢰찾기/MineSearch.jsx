@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, createContext, useMemo } from 'react';
+import React, { useEffect, useReducer, createContext, useMemo, memo } from 'react';
 import Table from './Table';
 import Form from './Form';
 
@@ -308,7 +308,7 @@ const plantMine = (row, cell, mine) => {
 };
 
 // component
-const MineSearch = () => {
+const MineSearch = memo(() => {
   // state 대신 reducer를 사용
   const [state, dispatch] = useReducer(reducer, initialState);
   const { tableData, halted, timer, result } = state;
@@ -341,6 +341,6 @@ const MineSearch = () => {
       </TableContext.Provider>
     </>
   );
-};
+});
 
 export default MineSearch;

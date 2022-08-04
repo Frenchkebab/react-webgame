@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, memo, useMemo } from 'react';
 import { CODE, OPEN_CELL, CLICK_MINE, FLAG_CELL, QUESTION_CELL, NORMALIZE_CELL, TableContext } from './MineSearch';
 
 const getTdStyle = (code) => {
@@ -63,8 +63,8 @@ const getTdText = (code) => {
 };
 
 // props를 통해 해당 칸의 좌표를 알 수 있음
-const Td = ({ rowIndex, cellIndex }) => {
-  const { tableData, dispatch, halted } = useContext(TableContext);
+const Td = memo(({ rowIndex, cellIndex }) => {
+  const { tableData, dispatch, halted } = useContext(TableContext); // ContextAPI를 쓰면 기본적으로 렌더링이 됨
 
   /* 
     ! [] 안에 halted를 넣어두지 않아서 update 안되는 문제가 있었음
@@ -141,12 +141,20 @@ const Td = ({ rowIndex, cellIndex }) => {
     [tableData[rowIndex][cellIndex], halted] // tableData는 클릭 시 바뀌므로 배열 안에 넣어줌
   );
 
-  return (
+  return useMemo(() => {
     // 우클릭 : onContextMenu
     <td style={getTdStyle(tableData[rowIndex][cellIndex])} onClick={onClickTd} onContextMenu={onRightClickTd}>
       {getTdText(tableData[rowIndex][cellIndex])}
-    </td>
-  );
-};
+    </td>;
+  }, tableData[rowIndex][cellIndex]);
 
+  // return <RealTd onClickTd={onClickTd} onRightClickTd={onRightClickTd} data={tableData[rowIndex][cellIndex]} />;
+});
+
+// const RealTd = memo(({ onClickTd, onRightClickTd, data }) => {
+//   // 우클릭 : onContextMenu
+//   <td style={getTdStyle(tableData[rowIndex][cellIndex])} onClick={onClickTd} onContextMenu={onRightClickTd}>
+//     {getTdText(tableData[rowIndex][cellIndex])}
+//   </td>;
+// });
 export default Td;
