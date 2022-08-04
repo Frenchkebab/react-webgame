@@ -52,36 +52,94 @@ const reducer = (state, action) => {
     case OPEN_CELL:
       const tableData = [...state.tableData]; // tableData 얕은 복사
       tableData[action.row] = [...state.tableData[action.row]]; // 클릭한 줄을 다시 얕은 복사 (윗줄에서는 참조 상태)
-      tableData[action.row][action.cell] = CODE.OPENED; // 클릭한 셀을 OPENED로 변경 -> 이 action을 Td에서 dispatch
+
+      // 모든 칸을 객체로 만들어줌
+      tableData.forEach((row, i) => {
+        tableData[i] = [...row];
+      });
+
+      // 한 번 검사한 칸은 다시 checkAround를 돌리지 않도록
+      const checked = [];
 
       // 상하좌우대각선 8칸 검사
+      const checkAround = (row, cell) => {
+        // 클릭한 셀이 [열린 칸, 지뢰 칸, '!', '?'] 중 하나이면 넘어감
 
-      let around = [];
+        if (row < 0 || row >= tableData.length || cell < 0 || cell >= tableData[0].length) {
+          return;
+        } // 상하좌우 없는칸은 안 열기
 
-      // 윗줄이 있는 경우
-      if (tableData[action.row - 1]) {
-        around = around.concat(
-          tableData[action.row - 1][action.cell - 1],
-          tableData[action.row - 1][action.cell],
-          tableData[action.row - 1][action.cell + 1]
-        );
-      }
+        if (
+          [CODE.OPENED, CODE.FLAG_MINE, CODE.FLAG, CODE.QUESTION_MINE, CODE.QUESTION].includes(tableData[row][cell])
+        ) {
+          return;
+        }
 
-      // 좌우는 검사할 필요 없음 (어차피 action.row는 존재하므로 undefined)
-      around = around.concat(tableData[action.row][action.cell - 1], tableData[action.row][action.cell + 1]);
+        // 이미 검사한 칸이면 return
+        if (checked.includes(row + ',' + cell)) {
+          return;
+        } else {
+          checked.push(row + ',' + cell);
+        }
 
-      // 아랫줄이 있는 경우
-      if (tableData[action.row + 1]) {
-        around = around.concat(
-          tableData[action.row + 1][action.cell - 1],
-          tableData[action.row + 1][action.cell],
-          tableData[action.row + 1][action.cell + 1]
-        );
-      }
+        // 상하좌우가 범위를 벗어나면 넘어감
+        if (row < 0 || row > tableData.length || cell < 0 || cell > tableData[0].length) {
+          return;
+        }
 
-      const count = around.filter((v) => [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)).length;
-      console.log(count);
-      tableData[action.row][action.cell] = count; // 해당 개수를 칸에 넣어줌
+        let around = [];
+
+        // 윗줄이 있는 경우
+        if (tableData[row - 1]) {
+          around = around.concat(tableData[row - 1][cell - 1], tableData[row - 1][cell], tableData[row - 1][cell + 1]);
+        }
+
+        // 좌우는 검사할 필요 없음 (어차피 row는 존재하므로 undefined)
+        around = around.concat(tableData[row][cell - 1], tableData[row][cell + 1]);
+
+        // 아랫줄이 있는 경우
+        if (tableData[row + 1]) {
+          around = around.concat(tableData[row + 1][cell - 1], tableData[row + 1][cell], tableData[row + 1][cell + 1]);
+        }
+
+        // filter에서 'X' or '!' or '?' 중 하나가 있는 셀만 걸러냄 (여기서 좌/우에 칸이 없을 경우 undefined라서 걸러짐)
+        const count = around.filter((v) => [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)).length;
+        tableData[row][cell] = count; // 해당 개수를 칸에 넣어줌
+
+        // 클릭한 칸이 빈칸이면 재귀로 주변 빈칸까지 다 비워줌
+        if (count === 0) {
+          const near = [];
+          // 주변 8칸을 모두 검사
+
+          // 제일 윗 줄을 클릭했는지 검사
+          if (row - 1 > -1) {
+            near.push([row - 1, cell - 1]);
+            near.push([row - 1, cell]);
+            near.push([row - 1, cell + 1]);
+          }
+
+          near.push([row, cell - 1]);
+          near.push([row, cell + 1]);
+
+          // 제일 아랫 줄을 클릭했는지 검사
+          if (row + 1 < tableData.length) {
+            near.push([row + 1, cell - 1]);
+            near.push([row + 1, cell]);
+            near.push([row + 1, cell + 1]);
+          }
+
+          near.forEach((el) => {
+            // 이미 연 칸이 아니면 검사
+            if (tableData[el[0]][el[1]] !== CODE.OPENED) {
+              checkAround(el[0], el[1]);
+            }
+          });
+        } else {
+        }
+      };
+
+      // 주변 8칸 검사
+      checkAround(action.row, action.cell);
 
       // tableData를 변경함
       return {
