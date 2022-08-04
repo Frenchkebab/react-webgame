@@ -67,15 +67,16 @@ const reducer = (state, action) => {
 
         if (row < 0 || row >= tableData.length || cell < 0 || cell >= tableData[0].length) {
           return;
-        } // 상하좌우 없는칸은 안 열기
+        }
 
+        // 상하좌우 없는칸은 안 열기
         if (
           [CODE.OPENED, CODE.FLAG_MINE, CODE.FLAG, CODE.QUESTION_MINE, CODE.QUESTION].includes(tableData[row][cell])
         ) {
           return;
         }
 
-        // 이미 검사한 칸이면 return
+        // 이미 검사한 칸이면 무시하기
         if (checked.includes(row + ',' + cell)) {
           return;
         } else {
@@ -83,7 +84,7 @@ const reducer = (state, action) => {
         }
 
         // 상하좌우가 범위를 벗어나면 넘어감
-        if (row < 0 || row > tableData.length || cell < 0 || cell > tableData[0].length) {
+        if (row < 0 || row >= tableData.length || cell < 0 || cell >= tableData[0].length) {
           return;
         }
 
