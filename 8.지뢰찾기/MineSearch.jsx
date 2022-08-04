@@ -1,4 +1,4 @@
-import React, { useReducer, createContext, useMemo } from 'react';
+import React, { useEffect, useReducer, createContext, useMemo } from 'react';
 import Table from './Table';
 import Form from './Form';
 
@@ -24,9 +24,15 @@ export const TableContext = createContext({
 // 초기 state 모음
 const initialState = {
   tableData: [],
+  data: {
+    row: 0,
+    cell: 0,
+    mine: 0,
+  },
   timer: 0,
   result: '',
-  halted: false,
+  halted: true,
+  openedCount: 0,
 };
 
 // action 이름 정의
@@ -36,6 +42,7 @@ export const CLICK_MINE = 'CLICK_MINE';
 export const FLAG_CELL = 'FLAG_CELL';
 export const QUESTION_CELL = 'QUESTION_CELL';
 export const NORMALIZE_CELL = 'NORMALIZE_CELL';
+export const INCREMENT_TIMER = 'INCREMENT_TIMER';
 
 // reducer 함수 (action에 따라 할 동작 정의)
 const reducer = (state, action) => {
@@ -44,8 +51,15 @@ const reducer = (state, action) => {
     case START_GAME:
       return {
         ...state,
+        data: {
+          row: action.row,
+          cell: action.cell,
+          mine: action.mine,
+        }, // 스타트 시 가로, 세로, 지뢰수 기록
+        openedCount: 0, // 게임 시작 시 초기화
         tableData: plantMine(action.row, action.cell, action.mine),
         halted: false, // 게임 시작하면 다시 halted를 false로 변경
+        timer: 0,
       };
 
     // 일반 칸 클릭
@@ -60,6 +74,9 @@ const reducer = (state, action) => {
 
       // 한 번 검사한 칸은 다시 checkAround를 돌리지 않도록
       const checked = [];
+
+      // 오픈된 칸 수
+      let openedCount = 0;
 
       // 상하좌우대각선 8칸 검사
       const checkAround = (row, cell) => {
@@ -88,6 +105,7 @@ const reducer = (state, action) => {
           return;
         }
 
+        // 선택 칸의 주변 8칸 배열기
         let around = [];
 
         // 윗줄이 있는 경우
@@ -105,7 +123,6 @@ const reducer = (state, action) => {
 
         // filter에서 'X' or '!' or '?' 중 하나가 있는 셀만 걸러냄 (여기서 좌/우에 칸이 없을 경우 undefined라서 걸러짐)
         const count = around.filter((v) => [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)).length;
-        tableData[row][cell] = count; // 해당 개수를 칸에 넣어줌
 
         // 클릭한 칸이 빈칸이면 재귀로 주변 빈칸까지 다 비워줌
         if (count === 0) {
@@ -135,17 +152,38 @@ const reducer = (state, action) => {
               checkAround(el[0], el[1]);
             }
           });
-        } else {
         }
+
+        // 해당 칸이 닫혀있는 칸일 경우에만
+        if (tableData[row][cell] === CODE.NORMAL) {
+          // 체크한 칸 카운트
+          openedCount++;
+        }
+        tableData[row][cell] = count;
       };
 
       // 주변 8칸 검사
       checkAround(action.row, action.cell);
 
+      // return에서 반환
+      let halted = false;
+      let result = '';
+
+      console.log(state.data.row * state.data.cell - state.data.mine, state.openedCount, openedCount);
+
+      // 승리 조건
+      if (state.data.row * state.data.cell - state.data.mine === state.openedCount + openedCount) {
+        halted = true;
+        result = `${state.timer}초 만에 승리하셨습니다`;
+      }
+
       // tableData를 변경함
       return {
         ...state,
         tableData,
+        openedCount: state.openedCount + openedCount,
+        halted,
+        result,
       };
 
     // 지뢰 클릭
@@ -221,6 +259,13 @@ const reducer = (state, action) => {
       };
     }
 
+    case INCREMENT_TIMER: {
+      return {
+        ...state,
+        timer: state.timer + 1,
+      };
+    }
+
     default:
       return state;
   }
@@ -271,6 +316,19 @@ const MineSearch = () => {
   // ContextAPI 성능을 위해 props값을 memo에 넣어줌 (tableData, dispatch를 하위 컴포넌트에 전달)
   // tableData의 값이 바뀌면 자동으로 props의 값을 update해줌
   const value = useMemo(() => ({ tableData: tableData, halted: halted, dispatch }), [tableData, halted]);
+
+  useEffect(() => {
+    let timer;
+    if (halted === false) {
+      timer = setInterval(() => {
+        dispatch({ type: INCREMENT_TIMER });
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [halted]);
 
   return (
     <>
