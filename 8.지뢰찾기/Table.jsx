@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
-import Tr from './Tr';
+import React, { useContext, memo } from 'react';
 import { TableContext } from './MineSearch';
+import Tr from './Tr';
 
-const Table = () => {
-  const { tableData } = useContext(TableContext); // value.tabledata
+const Table = memo(() => {
+  const { tableData } = useContext(TableContext);
+
   return (
     <table>
       {Array(tableData.length)
@@ -13,6 +14,6 @@ const Table = () => {
         ))}
     </table>
   );
-};
+});
 
 export default Table;

@@ -1,13 +1,8 @@
 {
   "name": "mine",
   "version": "1.0.0",
-  "description": "Redux에서 차용한 useReducer를 배웠음. `state`가 여러 개일 때, 하나로 묶어주고 `action`을 `dispatch`해서 `state`를 바꾸어줌.",
-  "main": "index.js",
-  "scripts": {
-    "dev": "webpack serve --env development"
-  },
-  "author": "",
-  "license": "ISC",
+  "description": "",
+  "main": "webpack.config.js",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -25,5 +20,10 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.9.3"
-  }
+  },
+  "scripts": {
+    "dev": "webpack serve --env development"
+  },
+  "author": "",
+  "license": "ISC"
 }

@@ -1,23 +1,26 @@
-import React, { useState, useCallback, useContext } from 'react'; // 콜백함수는 웬만하면 useCallback으로 감싸주는 습관 들일것
-import { START_GAME, TableContext } from './MineSearch';
+import React, { useState, useCallback, useContext, memo } from 'react';
+import { TableContext } from './MineSearch';
+import { START_GAME } from './MineSearch';
 
-const Form = () => {
+const Form = memo(() => {
   const [row, setRow] = useState(10);
   const [cell, setCell] = useState(10);
   const [mine, setMine] = useState(20);
-  console.log(useContext(TableContext));
   const { dispatch } = useContext(TableContext);
 
   const onChangeRow = useCallback((e) => {
     setRow(e.target.value);
   }, []);
+
   const onChangeCell = useCallback((e) => {
     setCell(e.target.value);
   }, []);
+
   const onChangeMine = useCallback((e) => {
     setMine(e.target.value);
   }, []);
 
+  // ContextAPI 처음으로 적용
   const onClickBtn = useCallback(() => {
     dispatch({ type: START_GAME, row, cell, mine });
   }, [row, cell, mine]);
@@ -30,6 +33,6 @@ const Form = () => {
       <button onClick={onClickBtn}>시작</button>
     </div>
   );
-};
+});
 
 export default Form;
